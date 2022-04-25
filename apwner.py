@@ -6,7 +6,7 @@ from mods.args import *
 import threading
 import sys
 
-if os.geteuid() != 0:
+if geteuid() != 0:
     sys.exit(color.YELLOW+"Run as root!"+color.END)
 if args.Handshake:
     print(banner)

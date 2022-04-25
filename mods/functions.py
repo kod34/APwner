@@ -10,7 +10,7 @@ from prettytable import PrettyTable
 from mods.colors import *
 
 def aireplay():
-    print("[+] Deauthenticating "+bssid+" on channel "+channel+"...")
+    print(color.BLUE+"[+] Deauthenticating "+bssid+" on channel "+channel+"...")
     cmd = subprocess.run(['xterm', '-geometry', '110x24+0+0', '-hold', '-e', 'aireplay-ng', '-0', '0', '-a', bssid, interface])
     
 
