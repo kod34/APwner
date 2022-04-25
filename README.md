@@ -42,7 +42,7 @@ chmod +x install.sh
 ## 🎈 Usage <a name="usage"></a>
 
 ```
-apwner.py [-h] [-H] [-D]
+apwner [-h] [-H] [-D]
 
 optional arguments:
   -h, --help       show this help message and exit
