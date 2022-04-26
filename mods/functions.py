@@ -25,13 +25,13 @@ def NetworkManager():
 def airodump():
     print(color.GREEN+"[+] Scanning for Access Points..."+color.END)
     subprocess.run(['mkdir', '-p', 'dumps'])
-    subprocess.run(['xterm', '-geometry', '110x48-0+0', '-hold', '-e', 'airodump-ng', '-w' , 'dumps/dump', '--output-format', 'csv', interface])
+    subprocess.run(['xterm', '-geometry', '110x48-0+0', '-hold', '-e', 'airodump-ng', '-w' , '/tmp/dumps/dump', '--output-format', 'csv', interface])
 
 def read_dump():
     global bssid, essid, channel, AP_dict, c, nwst_file
     AP_dict = {}
     c = 1
-    nwst_file = max(glob.glob('dumps/*.csv'), key=os.path.getctime)
+    nwst_file = max(glob.glob('/tmp/dumps/*.csv'), key=os.path.getctime)
     with open(nwst_file, 'r') as csvfile:
         dump_file = csv.reader(csvfile)
         print("Available access points:\n")
@@ -166,8 +166,8 @@ def get_interface():
 
 def handshake():
 	if run == True:
-		subprocess.run(['mkdir', '-p', 'handshakes/'+essid+'_'+bssid])
-		subprocess.run(['xterm', '-geometry', '110x24-0+0', '-hold', '-e', 'airodump-ng', '--bssid', bssid, '-c', channel, '-w' , 'handshakes/'+essid+'_'+bssid+'/'+essid+'_'+bssid, interface])
+		subprocess.run(['mkdir', '-p', '/tmp/handshakes/'+essid+'_'+bssid])
+		subprocess.run(['xterm', '-geometry', '110x24-0+0', '-hold', '-e', 'airodump-ng', '--bssid', bssid, '-c', channel, '-w' , '/tmp/handshakes/'+essid+'_'+bssid+'/'+essid+'_'+bssid, interface])
 
 def change_mac():
     print(color.GREEN+"[+] Bringing interface "+str(interface)+" down..."+color.END)
@@ -192,8 +192,8 @@ def read_dump_s():
     station_dict = {0:"All"}
     s = 0
     print(color.GREEN+"[+] Scanning for stations on "+ bssid+"..."+color.END)
-    subprocess.run(['xterm', '-geometry', '110x48-0+0', '-hold', '-e', 'airodump-ng', '--bssid', bssid, '-w' , 'dumps/'+bssid, '--output-format', 'csv', '-c', channel, interface])
-    nwst_file = max(glob.glob('dumps/*.csv'), key=os.path.getctime)
+    subprocess.run(['xterm', '-geometry', '110x48-0+0', '-hold', '-e', 'airodump-ng', '--bssid', bssid, '-w' , '/tmp/dumps/'+bssid, '--output-format', 'csv', '-c', channel, interface])
+    nwst_file = max(glob.glob('/tmp/dumps/*.csv'), key=os.path.getctime)
     with open(nwst_file, 'r') as csvfile:
         dump_file = csv.reader(csvfile)
         print("\nStations Detected:\n")
