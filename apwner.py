@@ -10,35 +10,47 @@ if geteuid() != 0:
     sys.exit(color.YELLOW+"Run as root!"+color.END)
 if args.Handshake:
     print(banner)
-    get_interface()
+    try:
+        get_interface()
+    except KeyboardInterrupt:
+        sys.exit(color.RED+"\n[-] Keyboard Interrupt"+color.END)
 
-
-    change_mac()
-    check_kill()
-    airodump()
-    read_dump()
-    airmon()
-    read_dump_s()
-    t1 = threading.Thread(target=ddos)
-    t2 = threading.Thread(target=handshake)
-    t1.start()
-    t2.start()
-    t1.join()
-    t2.join()
+    try:
+        change_mac()
+        check_kill()
+        airodump()
+        read_dump()
+        airmon()
+        read_dump_s()
+        t1 = threading.Thread(target=ddos)
+        t2 = threading.Thread(target=handshake)
+        t1.start()
+        t2.start()
+        t1.join()
+        t2.join()
+    except KeyboardInterrupt:
+        print(color.RED+"\n[-] Keyboard Interrupt"+color.END)
+        NetworkManager()
+        reset_mac()
 
 
 elif args.Dos:
     print(banner)
-    get_interface()
-
-
-    change_mac()
-    check_kill()
-    airodump()
-    read_dump()
-    airmon()
-    read_dump_s()
-    ddos()
-
+    try:
+        get_interface()
+    except:
+        sys.exit(color.RED+"\n[-] Keyboard Interrupt"+color.END)
+    try:
+        change_mac()
+        check_kill()
+        airodump()
+        read_dump()
+        airmon()
+        read_dump_s()
+        ddos()
+    except KeyboardInterrupt:
+        print(color.RED+"\n[-] Keyboard Interrupt"+color.END)
+        NetworkManager()
+        reset_mac()
 else:
     parser.error("Select a mode")
