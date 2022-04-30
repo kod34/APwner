@@ -7,7 +7,7 @@ import threading
 import sys
 
 if geteuid() != 0:
-    sys.exit(color.YELLOW+"Run as root!"+color.END)
+    sys.exit(color.RED+"Run as root!"+color.END)
 if args.Handshake:
     print(banner)
     try:
@@ -28,10 +28,10 @@ if args.Handshake:
         print(color.RED+"\n[-] Keyboard Interrupt"+color.END)
         NetworkManager()
         reset_mac()
-    # except:
-    #     print(color.RED+"\n[-] Unknown error"+color.END)
-    #     NetworkManager()
-    #     reset_mac()
+    except:
+        print(color.RED+"\n[-] Unknown error"+color.END)
+        NetworkManager()
+        reset_mac()
 
 
 elif args.Dos:
