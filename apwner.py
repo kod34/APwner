@@ -32,6 +32,10 @@ if args.Handshake:
         print(color.RED+"\n[-] Keyboard Interrupt"+color.END)
         NetworkManager()
         reset_mac()
+    except:
+        print(color.RED+"\n[-] Unknown error"+color.END)
+        NetworkManager()
+        reset_mac()
 
 
 elif args.Dos:
@@ -50,6 +54,10 @@ elif args.Dos:
         ddos()
     except KeyboardInterrupt:
         print(color.RED+"\n[-] Keyboard Interrupt"+color.END)
+        NetworkManager()
+        reset_mac()
+    except:
+        print(color.RED+"\n[-] Unknown error"+color.END)
         NetworkManager()
         reset_mac()
 else:
