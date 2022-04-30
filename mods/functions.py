@@ -166,13 +166,11 @@ def get_interface():
         NetworkManager()
         reset_mac()
         sys.exit()
-            
 
 def handshake():
     if run == True:
-        handshake_path = os.path.join('/tmp','apwner_handshakes', essid+'_'+bssid)
+        handshake_path = os.path.join('handshakes', essid+'_'+bssid)
         os.makedirs(handshake_path, exist_ok = True)
-        subprocess.run(['mkdir', '-p', '/tmp/apwner_handshakes/'+essid+'_'+bssid])
         subprocess.run(['xterm', '-geometry', '110x24-0+0', '-hold', '-e', 'airodump-ng', '--bssid', bssid, '-c', channel, '-w' , handshake_path+'/'+essid+'_'+bssid, interface])
 
 def change_mac():
