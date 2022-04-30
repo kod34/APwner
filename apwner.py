@@ -22,20 +22,16 @@ if args.Handshake:
         read_dump()
         airmon()
         read_dump_s()
-        t1 = threading.Thread(target=ddos)
-        t2 = threading.Thread(target=handshake)
-        t1.start()
-        t2.start()
-        t1.join()
-        t2.join()
+        attck_thread()
+        ReDo()
     except KeyboardInterrupt:
         print(color.RED+"\n[-] Keyboard Interrupt"+color.END)
         NetworkManager()
         reset_mac()
-    except:
-        print(color.RED+"\n[-] Unknown error"+color.END)
-        NetworkManager()
-        reset_mac()
+    # except:
+    #     print(color.RED+"\n[-] Unknown error"+color.END)
+    #     NetworkManager()
+    #     reset_mac()
 
 
 elif args.Dos:

