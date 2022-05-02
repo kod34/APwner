@@ -65,7 +65,7 @@ def read_dump():
                     pwr = row[8].strip()
                     AP_dict.update({c:row[0]})
                     if int(row[8].strip()) > -50 and int(row[8].strip()) != -1:
-                        pwr = color.BLUE+pwr+color.END
+                        pwr = color.GREEN+pwr+color.END
                     elif int(row[8].strip()) > -68 and int(row[8].strip()) < -50 and int(row[8].strip()) != -1:
                         pwr = color.YELLOW+pwr+color.END
                     else:
@@ -75,7 +75,7 @@ def read_dump():
                     elif rep == 1:
                         str_rep = color.YELLOW+str(rep)+color.END
                     else:
-                        str_rep = color.BLUE+str(rep)+color.END
+                        str_rep = color.GREEN+str(rep)+color.END
                     airo_table.add_row([str(c), essid, bssid, channel, enc, pwr, str_rep])
                     c = str(int(c)+1)
         airo_table.align = "c"

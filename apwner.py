@@ -3,7 +3,6 @@
 from os import geteuid
 from mods.functions import *
 from mods.args import *
-import threading
 import sys
 
 if geteuid() != 0:
@@ -28,7 +27,7 @@ if args.Handshake:
         print(color.RED+"\n[-] Keyboard Interrupt"+color.END)
         NetworkManager()
         reset_mac()
-    except:
+    else:
         print(color.RED+"\n[-] Unknown error"+color.END)
         NetworkManager()
         reset_mac()
@@ -52,7 +51,7 @@ elif args.Dos:
         print(color.RED+"\n[-] Keyboard Interrupt"+color.END)
         NetworkManager()
         reset_mac()
-    except:
+    else:
         print(color.RED+"\n[-] Unknown error"+color.END)
         NetworkManager()
         reset_mac()
