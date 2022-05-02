@@ -3,9 +3,6 @@
 <h1 align="center"><b>APwner</b></h1>
 
 
-
----
-
 <p align="center"> APwner is a program built to automate the process of capturing WPA handshakes as well as denying the service of an access point or specific devices running on the access point. 
     <br> 
 </p>
