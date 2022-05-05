@@ -42,7 +42,7 @@ def change_mac():
     print(color.BLUE+"[~] Changing MAC address..."+color.END)
     subprocess.run(['ifconfig', interface ,'down'], capture_output=True).stdout.decode()
     cmd = subprocess.run(['macchanger', '-A' , interface], capture_output=True).stdout.decode()
-    for line in cmd.strip().splitlines():
+    for line in cmd.strip().splitlines()[:3]:
         print(color.GREEN+"[+] "+line.split(':', 1)[0]+": "+color.YELLOW+line.split(':', 1)[1]+color.END)
     subprocess.run(['ifconfig', interface ,'up'], capture_output=True).stdout.decode()
 
@@ -50,7 +50,7 @@ def reset_mac():
     print(color.BLUE+"[~] Restoring MAC address..."+color.END)
     subprocess.run(['ifconfig', interface ,'down'], capture_output=True).stdout.decode()
     cmd = subprocess.run(['macchanger', '-p' , interface], capture_output=True).stdout.decode()
-    for line in cmd.strip().splitlines():
+    for line in cmd.strip().splitlines()[:3]:
         print(color.GREEN+"[+] "+line.split(':', 1)[0]+": "+color.YELLOW+line.split(':', 1)[1]+color.END)
     subprocess.run(['ifconfig', interface ,'up'], capture_output=True).stdout.decode()
     
