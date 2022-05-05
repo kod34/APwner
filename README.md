@@ -60,7 +60,7 @@ sudo python3 apwner.py -D
 ```
   
 ### 📝 Notes  
-- To send deauthentication packets to specific stations within the network, input the numbers corresponding to the devices separated by a space (Station: 1 3 4)  
+- To send deauthentication packets to specific stations within the network, input the numbers corresponding to the devices separated by a space (ex: 1 3 4)  
 - Airodump captures are stored in the <b>/tmp/apwner_dumps/</b> directory.
 - Handshakes are stored in the <b>./handshakes/</b> directory.
 
