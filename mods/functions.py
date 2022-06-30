@@ -88,12 +88,13 @@ def get_interface():
     elif int_ch == "E":
         print(color.RED+"\n[-] Exiting..."+color.END)
         sys.exit()
-    try:
-        interface = int_dict[int_ch]
-    except:
-        NetworkManager()
-        reset_mac()
-        sys.exit()
+    else:
+        try:
+            interface = int_dict[int_ch]
+        except:
+            NetworkManager()
+            reset_mac()
+            sys.exit()
 
 def read_dump():
     global bssid, essid, channel, AP_dict, c, nwst_file
