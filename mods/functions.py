@@ -82,7 +82,7 @@ def get_interface():
     print(color.RED+"[E] : "+"Exit\n"+color.END)
     int_ch = ""
     while int_ch != "I" and int_ch != "E" and int_ch not in int_dict.keys():
-        int_ch = input("Choice: ")
+        int_ch = int(input("Choice: "))
     if int_ch == "I":
         get_interface()
     elif int_ch == "E":
